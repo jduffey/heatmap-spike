@@ -21,14 +21,14 @@ function App() {
             let maxPayoutMultiplier;
 
             // Generate a biased random value for minHouseEdge
-            if (Math.random() < 0.5) {
+            if (Math.random() < 0.05) {
                 minHouseEdge = 0.05 + Math.random() * 0.1; // Range of 0.05 to 0.15
             } else {
                 minHouseEdge = Math.random();
             }
 
             // Generate a biased random value for maxPayoutMultiplier
-            if (Math.random() < 0.5) {
+            if (Math.random() < 0.05) {
                 maxPayoutMultiplier = Math.floor(Math.random() * 40) + 10; // Range of 10 to 50
             } else {
                 maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1;
@@ -53,8 +53,8 @@ function App() {
         setTableData(tableData);
     }
 
-    const xTicks = Array.from({ length: 20 }, (_, i) => (i * 0.1).toFixed(2));
-    const yTicks = Array.from({ length: 10 }, (_, i) => i * 10);
+    const minHouseEdgeTicks = Array.from({ length: 20 }, (_, i) => (i * 0.1).toFixed(2));
+    const maxPayoutMultiplierTicks = Array.from({ length: 10 }, (_, i) => i * 5);
 
     const columns = useMemo(
         () => [
@@ -90,8 +90,8 @@ function App() {
                 data={[
                     {
                         z: data,
-                        x: xTicks,
-                        y: yTicks,
+                        x: minHouseEdgeTicks,
+                        y: maxPayoutMultiplierTicks,
                         type: 'heatmap',
                         colorscale: [
                             [0, 'white'],
@@ -99,13 +99,21 @@ function App() {
                             [1, 'yellow'],
                         ],
                         zmin: 0,
-                        // zmax: 1000,
+                        // zmax: 1000, // Don't bound this because it should expand based on the dollar amounts
                     },
                 ]}
                 layout={{
                     title: 'Minimum House Edge vs. Maximum Payout Multiplier',
-                    xaxis: { title: 'Minimum House Edge', dtick: 0.05, range: [0, 1] },
-                    yaxis: { title: 'Maximum Payout Multiplier', dtick: 10, range: [-5, 100] },
+                    xaxis: {
+                        title: 'Minimum House Edge<br><-- Player   ADVANTAGE   House -->',
+                        dtick: 0.05,
+                        range: [0, 1],
+                    },
+                    yaxis: {
+                        title: 'Maximum Payout Multiplier<br><-- Lower   VARIANCE   Higher -->',
+                        dtick: 10,
+                        range: [0, 100],
+                    },
                 }}
             />
 
