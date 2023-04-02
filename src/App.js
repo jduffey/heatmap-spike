@@ -11,20 +11,41 @@ function App() {
     }, []);
 
     function generateRandomData() {
-        let heatmapData = Array.from({ length: 21 }, () =>
+        let heatmapData = Array.from({ length: 20 }, () =>
             Array.from({ length: 10 }, () => 0)
         );
         let tableData = [];
 
         for (let i = 0; i < 100; i++) {
-            let minHouseEdge = Math.random();
-            let maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1;
+            let minHouseEdge;
+            let maxPayoutMultiplier;
+
+            // Generate a biased random value for minHouseEdge
+            if (Math.random() < 0.5) {
+                minHouseEdge = 0.05 + Math.random() * 0.1; // Range of 0.05 to 0.15
+            } else {
+                minHouseEdge = Math.random();
+            }
+
+            // Generate a biased random value for maxPayoutMultiplier
+            if (Math.random() < 0.5) {
+                maxPayoutMultiplier = Math.floor(Math.random() * 40) + 10; // Range of 10 to 50
+            } else {
+                maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1;
+            }
+
             let dollarAmount = Math.floor(Math.random() * 99 + 1) * 10;
 
             let xIndex = Math.floor(minHouseEdge / 0.05);
             let yIndex = Math.floor(maxPayoutMultiplier / 10);
 
-            heatmapData[xIndex][yIndex] += dollarAmount;
+            // Accumulate the dollar amounts for bins less than or equal to the current indices
+            for (let xi = 0; xi <= xIndex; xi++) {
+                for (let yi = 0; yi <= yIndex; yi++) {
+                    heatmapData[xi][yi] += dollarAmount;
+                }
+            }
+
             tableData.push({ minHouseEdge, maxPayoutMultiplier, dollarAmount });
         }
 
@@ -32,8 +53,8 @@ function App() {
         setTableData(tableData);
     }
 
-    const xTicks = Array.from({ length: 21 }, (_, i) => (i * 0.05).toFixed(2));
-    const yTicks = Array.from({ length: 11 }, (_, i) => i * 10);
+    const xTicks = Array.from({ length: 20 }, (_, i) => (i * 0.1).toFixed(2));
+    const yTicks = Array.from({ length: 10 }, (_, i) => i * 10);
 
     const columns = useMemo(
         () => [
@@ -73,15 +94,18 @@ function App() {
                         y: yTicks,
                         type: 'heatmap',
                         colorscale: [
-                            [0, 'blue'],
+                            [0, 'white'],
+                            [0.0001, 'blue'],
                             [1, 'yellow'],
                         ],
+                        zmin: 0,
+                        // zmax: 1000,
                     },
                 ]}
                 layout={{
                     title: 'Minimum House Edge vs. Maximum Payout Multiplier',
-                    xaxis: { title: 'Minimum House Edge', dtick: 0.05 },
-                    yaxis: { title: 'Maximum Payout Multiplier', dtick: 10 },
+                    xaxis: { title: 'Minimum House Edge', dtick: 0.05, range: [0, 1] },
+                    yaxis: { title: 'Maximum Payout Multiplier', dtick: 10, range: [-5, 100] },
                 }}
             />
 
