@@ -1,8 +1,8 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 
-const xTicks = Array.from({ length: 20 }, (_, i) => (i * .05).toFixed(3));
-const yTicks = Array.from({ length: 100 }, (_, i) => (i * 10).toFixed(2));
+const minHouseEdgeTicks = Array.from({ length: 10 }, (_, i) => (i * 10).toFixed(2));
+const maxPayoutMultiplierTicks = Array.from({ length: 10 }, (_, i) => (i * .05).toFixed(3));
 
 export default function Heatmap({ data, totalDollarAmount }) {
     return (
@@ -10,8 +10,8 @@ export default function Heatmap({ data, totalDollarAmount }) {
             data={[
                 {
                     z: data,
-                    x: xTicks,
-                    y: yTicks,
+                    y: minHouseEdgeTicks,
+                    x: maxPayoutMultiplierTicks,
                     type: 'heatmap',
                     colorscale: [
                         [0, 'lightgray'],
@@ -31,13 +31,13 @@ export default function Heatmap({ data, totalDollarAmount }) {
                 title: `Minimum House Edge vs. Maximum Payout Multiplier<br>Total Deposits $${totalDollarAmount}`,
                 xaxis: {
                     title: 'Minimum House Edge<br><-- Player   ADVANTAGE   House -->',
-                    dtick: 0.05,
-                    range: [-.1, 1.1],
+                    dtick: 0.1,
+                    range: [-0.1, 1.1],
                 },
                 yaxis: {
                     title: 'Maximum Payout Multiplier<br><-- Lower   VARIANCE   Higher -->',
-                    dtick: 10,
-                    range: [-50, 150],
+                    // dtick: 10,
+                    range: [-10, 100],
                 },
             }}
         />

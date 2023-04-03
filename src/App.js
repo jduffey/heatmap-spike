@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import DataTable from './components/DataTable';
+// import DataTable from './components/DataTable';
 import Heatmap from './components/Heatmap';
 
 function App() {
@@ -11,31 +11,34 @@ function App() {
         generateRandomData();
     }, []);
 
+    function createEmptyHeatmapData() {
+        return Array.from({ length: 10 }, () => Array.from({ length: 20 }, () => 0));
+    }
+
+    function generateRandomDataPoint() {
+        const minHouseEdge = Math.random(); // 0 to 1
+        const maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1; // 1 to 100, increments of 1
+        const dollarAmount = Math.floor(Math.random() * 99 + 1) * 10;
+        return { minHouseEdge, maxPayoutMultiplier, dollarAmount };
+    }
+
     function generateRandomData() {
-        const dataForHeatmap =
-            Array.from({ length: 10 }, () =>
-                Array.from({ length: 20 }, () => 0)
-            );
-        const dataForTable = [];
+        const dataForHeatmap = createEmptyHeatmapData();
+        const dataForTable = Array.from({ length: 100 }, () => generateRandomDataPoint());
 
-        for (let i = 0; i < 500; i++) {
-            const minHouseEdge = Math.random(); // 0 to 1
-            const maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1; // 1 to 100, increments of 1
+        dataForTable.forEach(({ minHouseEdge, maxPayoutMultiplier, dollarAmount }) => {
+            const yIndex = Math.floor(maxPayoutMultiplier / 10);
+            const xIndex = Math.floor(minHouseEdge / 0.05);
 
-            const dollarAmount = Math.floor(Math.random() * 99 + 1) * 10;
-
-            const xIndex = Math.floor(maxPayoutMultiplier / 10);
-            const yIndex = Math.floor(minHouseEdge / 0.05);
+            console.log(minHouseEdge, maxPayoutMultiplier, dollarAmount, xIndex, yIndex);
 
             // Accumulate the dollar amounts for bins less than or equal to the current indices
             for (let xi = 0; xi < xIndex; xi++) {
                 for (let yi = 0; yi < yIndex; yi++) {
-                    dataForHeatmap[xi][yi] += dollarAmount;
+                    dataForHeatmap[yi][xi] += dollarAmount;
                 }
             }
-
-            dataForTable.push({ minHouseEdge, maxPayoutMultiplier, dollarAmount });
-        }
+        });
 
         setHeatmapData(dataForHeatmap);
         setTableData(dataForTable);
@@ -46,10 +49,9 @@ function App() {
     return (
         <div className="App">
             <Heatmap data={heatmapData} totalDollarAmount={totalDollarAmount} />
-            <DataTable data={tableData} />
+            {/* <DataTable data={tableData} /> */}
         </div>
     );
 }
 
 export default App;
-
