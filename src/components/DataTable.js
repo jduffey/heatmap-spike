@@ -15,6 +15,7 @@ const columns = [
     {
         Header: 'Dollar Amount',
         accessor: 'dollarAmount',
+        Cell: ({ value }) => `$${value}`,
     },
 ];
 

@@ -8,6 +8,21 @@ const BIN_SIZE = {
     minHouseEdge: 0.05,
 }
 const DATA_POINTS = 1000;
+const HOUSE_EDGE = {
+    min: 0.05,
+    max: 1,
+    step: 0.05,
+}
+const PAYOUT_MULTIPLIER = {
+    min: 5, // If this 1 then the max resulting data point is only 96
+    max: 100,
+    step: 5,
+}
+const DOLLAR_AMOUNT = {
+    min: 10,
+    max: 1000,
+    step: 10,
+}
 
 function App() {
     const [heatmapData, setHeatmapData] = useState([]);
@@ -22,9 +37,13 @@ function App() {
     }
 
     function generateRandomDataPoint() {
-        const minHouseEdge = Math.ceil(Math.random() * 1000) / 1000;
-        const maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1;
-        const dollarAmount = Math.floor(Math.random() * 99 + 1) * 10;
+        const minHouseEdge =
+            Math.floor(Math.random() * (HOUSE_EDGE.max / HOUSE_EDGE.step)) * HOUSE_EDGE.step + HOUSE_EDGE.min;
+        const maxPayoutMultiplier =
+            Math.floor(Math.random() * (PAYOUT_MULTIPLIER.max / PAYOUT_MULTIPLIER.step)) * PAYOUT_MULTIPLIER.step + PAYOUT_MULTIPLIER.min;
+        const dollarAmount =
+            Math.floor(Math.random() * (DOLLAR_AMOUNT.max / DOLLAR_AMOUNT.step)) * DOLLAR_AMOUNT.step + DOLLAR_AMOUNT.min;
+
         return { minHouseEdge, maxPayoutMultiplier, dollarAmount };
     }
 
