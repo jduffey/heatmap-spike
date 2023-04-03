@@ -3,7 +3,7 @@ import Plot from 'react-plotly.js';
 import { useTable, useSortBy } from 'react-table';
 
 function App() {
-    const [data, setData] = useState([]);
+    const [heatmapData, setHeatmapData] = useState([]);
     const [tableData, setTableData] = useState([]);
 
     useEffect(() => {
@@ -11,28 +11,17 @@ function App() {
     }, []);
 
     function generateRandomData() {
-        let heatmapData = Array.from({ length: 20 }, () =>
+        let dataForHeatmap = Array.from({ length: 20 }, () =>
             Array.from({ length: 10 }, () => 0)
         );
-        let tableData = [];
+        let dataForTable = [];
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 500; i++) {
             let minHouseEdge;
             let maxPayoutMultiplier;
 
-            // Generate a biased random value for minHouseEdge
-            if (Math.random() < 0.05) {
-                minHouseEdge = 0.05 + Math.random() * 0.1; // Range of 0.05 to 0.15
-            } else {
-                minHouseEdge = Math.random();
-            }
-
-            // Generate a biased random value for maxPayoutMultiplier
-            if (Math.random() < 0.05) {
-                maxPayoutMultiplier = Math.floor(Math.random() * 40) + 10; // Range of 10 to 50
-            } else {
-                maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1;
-            }
+            minHouseEdge = Math.random(); // 0 to 1
+            maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1; // 1 to 100, increments of 1
 
             let dollarAmount = Math.floor(Math.random() * 99 + 1) * 10;
 
@@ -40,21 +29,31 @@ function App() {
             let yIndex = Math.floor(maxPayoutMultiplier / 10);
 
             // Accumulate the dollar amounts for bins less than or equal to the current indices
-            for (let xi = 0; xi <= xIndex; xi++) {
-                for (let yi = 0; yi <= yIndex; yi++) {
-                    heatmapData[xi][yi] += dollarAmount;
+            for (let xi = 0; xi < xIndex; xi++) {
+                for (let yi = 0; yi < yIndex; yi++) {
+                    // console.log('xi', xi, 'yi', yi, 'dollarAmount', dollarAmount);
+                    dataForHeatmap[xi][yi] += dollarAmount;
+
+                    // check every value in dataForHeatmap to make sure it's not NaN
+                    if (isNaN(dataForHeatmap[xi][yi])) {
+                        console.log('dataForHeatmap[xi][yi] is NaN', dataForHeatmap[xi][yi]);
+                        console.log('xi', xi, 'yi', yi, 'dollarAmount', dollarAmount);
+                    }
                 }
             }
 
-            tableData.push({ minHouseEdge, maxPayoutMultiplier, dollarAmount });
+            dataForTable.push({ minHouseEdge, maxPayoutMultiplier, dollarAmount });
         }
 
-        setData(heatmapData);
-        setTableData(tableData);
+        setHeatmapData(dataForHeatmap);
+        setTableData(dataForTable);
     }
 
-    const minHouseEdgeTicks = Array.from({ length: 20 }, (_, i) => (i * 0.1).toFixed(2));
-    const maxPayoutMultiplierTicks = Array.from({ length: 10 }, (_, i) => i * 5);
+    const xTicks = Array.from({ length: 10 }, (_, i) => (i * 0.1).toFixed(2));
+    const yTicks = Array.from({ length: 10 }, (_, i) => (i * 5).toFixed(0));
+
+    // console.log('xTicks', xTicks);
+    // console.log('yTicks', yTicks);
 
     const columns = useMemo(
         () => [
@@ -84,35 +83,44 @@ function App() {
         prepareRow,
     } = useTable({ columns, data: tableData }, useSortBy);
 
+    const totalDollarAmount = tableData.reduce((sum, row) => sum + row.dollarAmount, 0);
+    console.log(heatmapData);
+
     return (
         <div className="App">
             <Plot
                 data={[
                     {
-                        z: data,
-                        x: minHouseEdgeTicks,
-                        y: maxPayoutMultiplierTicks,
+                        z: heatmapData,
+                        x: xTicks,
+                        y: yTicks,
                         type: 'heatmap',
                         colorscale: [
                             [0, 'white'],
-                            [0.0001, 'blue'],
-                            [1, 'yellow'],
+                            [0.0001, 'rgb(0,0,131)'],
+                            [0.125, 'rgb(0,60,170)'],
+                            [0.375, 'rgb(5,255,255)'],
+                            [0.625, 'rgb(255,255,0)'],
+                            [0.875, 'rgb(250,0,0)'],
+                            [1, 'rgb(128,0,0)'],
                         ],
                         zmin: 0,
-                        // zmax: 1000, // Don't bound this because it should expand based on the dollar amounts
+                        // zmax: totalDollarAmount, // This is implied so no need to set
                     },
                 ]}
                 layout={{
-                    title: 'Minimum House Edge vs. Maximum Payout Multiplier',
+                    width: 1200,
+                    height: 800,
+                    title: `Minimum House Edge vs. Maximum Payout Multiplier<br>Total Deposits $${totalDollarAmount}`,
                     xaxis: {
                         title: 'Minimum House Edge<br><-- Player   ADVANTAGE   House -->',
                         dtick: 0.05,
-                        range: [0, 1],
+                        range: [-.1, 1.1],
                     },
                     yaxis: {
                         title: 'Maximum Payout Multiplier<br><-- Lower   VARIANCE   Higher -->',
                         dtick: 10,
-                        range: [0, 100],
+                        range: [-50, 150],
                     },
                 }}
             />
