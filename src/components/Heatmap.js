@@ -4,7 +4,7 @@ import Plot from 'react-plotly.js';
 const minHouseEdgeTicks = Array.from({ length: 10 }, (_, i) => (i * 10).toFixed(2));
 const maxPayoutMultiplierTicks = Array.from({ length: 10 }, (_, i) => (i * .05).toFixed(3));
 
-export default function Heatmap({ data, totalDollarAmount }) {
+export default function Heatmap({ data, totalDollarAmount, countOfDataPoints }) {
     return (
         <Plot
             data={[
@@ -28,7 +28,7 @@ export default function Heatmap({ data, totalDollarAmount }) {
             layout={{
                 width: 1200,
                 height: 800,
-                title: `Minimum House Edge vs. Maximum Payout Multiplier<br>Total Deposits $${totalDollarAmount}`,
+                title: `Minimum House Edge vs. Maximum Payout Multiplier<br>Total Deposits $${totalDollarAmount}, n=${countOfDataPoints}`,
                 xaxis: {
                     title: 'Minimum House Edge<br><-- Player   ADVANTAGE   House -->',
                     dtick: 0.1,

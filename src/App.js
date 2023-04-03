@@ -7,6 +7,7 @@ const BIN_SIZE = {
     maxPayoutMultiplier: 10,
     minHouseEdge: 0.05,
 }
+const DATA_POINTS = 1000;
 
 function App() {
     const [heatmapData, setHeatmapData] = useState([]);
@@ -21,21 +22,19 @@ function App() {
     }
 
     function generateRandomDataPoint() {
-        const minHouseEdge = Math.random(); // 0 to 1
-        const maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1; // 1 to 100, increments of 1
+        const minHouseEdge = Math.ceil(Math.random() * 1000) / 1000;
+        const maxPayoutMultiplier = Math.floor(Math.random() * 100) + 1;
         const dollarAmount = Math.floor(Math.random() * 99 + 1) * 10;
         return { minHouseEdge, maxPayoutMultiplier, dollarAmount };
     }
 
     function generateRandomData() {
         const dataForHeatmap = createEmptyHeatmapData();
-        const dataForTable = Array.from({ length: 100 }, () => generateRandomDataPoint());
+        const dataForTable = Array.from({ length: DATA_POINTS }, () => generateRandomDataPoint());
 
         dataForTable.forEach(({ minHouseEdge, maxPayoutMultiplier, dollarAmount }) => {
             const yIndex = Math.floor(maxPayoutMultiplier / BIN_SIZE.maxPayoutMultiplier);
             const xIndex = Math.floor(minHouseEdge / BIN_SIZE.minHouseEdge);
-
-            console.log(minHouseEdge, maxPayoutMultiplier, dollarAmount, xIndex, yIndex);
 
             // Accumulate the dollar amounts for bins less than or equal to the current indices
             for (let xi = 0; xi <= xIndex; xi++) {
@@ -49,11 +48,12 @@ function App() {
         setTableData(dataForTable);
     }
 
-    const totalDollarAmount = tableData.reduce((sum, row) => sum + row.dollarAmount, 0);
+    const totalDollarAmount = tableData.reduce((acc, dataPoint) => acc + dataPoint.dollarAmount, 0);
+    const countOfDataPoints = tableData.length;
 
     return (
         <div className="App">
-            <Heatmap data={heatmapData} totalDollarAmount={totalDollarAmount} />
+            <Heatmap data={heatmapData} totalDollarAmount={totalDollarAmount} countOfDataPoints={countOfDataPoints} />
             <DataTable data={tableData} />
         </div>
     );
