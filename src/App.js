@@ -3,6 +3,11 @@ import React, { useState, useEffect } from 'react';
 import DataTable from './components/DataTable';
 import Heatmap from './components/Heatmap';
 
+const BIN_SIZE = {
+    maxPayoutMultiplier: 10,
+    minHouseEdge: 0.05,
+}
+
 function App() {
     const [heatmapData, setHeatmapData] = useState([]);
     const [tableData, setTableData] = useState([]);
@@ -27,8 +32,8 @@ function App() {
         const dataForTable = Array.from({ length: 100 }, () => generateRandomDataPoint());
 
         dataForTable.forEach(({ minHouseEdge, maxPayoutMultiplier, dollarAmount }) => {
-            const yIndex = Math.floor(maxPayoutMultiplier / 10);
-            const xIndex = Math.floor(minHouseEdge / 0.05);
+            const yIndex = Math.floor(maxPayoutMultiplier / BIN_SIZE.maxPayoutMultiplier);
+            const xIndex = Math.floor(minHouseEdge / BIN_SIZE.minHouseEdge);
 
             console.log(minHouseEdge, maxPayoutMultiplier, dollarAmount, xIndex, yIndex);
 

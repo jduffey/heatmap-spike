@@ -32,12 +32,12 @@ export default function Heatmap({ data, totalDollarAmount }) {
                 xaxis: {
                     title: 'Minimum House Edge<br><-- Player   ADVANTAGE   House -->',
                     dtick: 0.1,
-                    range: [-0.1, 1.1],
+                    range: [-0.025, 1.025],
                 },
                 yaxis: {
                     title: 'Maximum Payout Multiplier<br><-- Lower   VARIANCE   Higher -->',
                     dtick: 10,
-                    range: [-10, 100],
+                    range: [-5, 105],
                 },
             }}
         />
