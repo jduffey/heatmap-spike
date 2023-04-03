@@ -25,7 +25,7 @@ const DOLLAR_AMOUNT = {
 }
 
 function createEmptyHeatmapData() {
-    return Array.from({ length: 11 }, () => Array.from({ length: 21 }, () => 0));
+    return Array.from({ length: 10 }, () => Array.from({ length: 20 }, () => 0));
 }
 
 function generateRandomDataPoint() {
@@ -53,8 +53,8 @@ function App() {
                 const xIndex = Math.floor(minHouseEdge / BIN_SIZE.minHouseEdge);
 
                 // Accumulate the dollar amounts for bins less than or equal to the current indices
-                for (let xi = 0; xi <= xIndex; xi++) {
-                    for (let yi = 0; yi <= yIndex; yi++) {
+                for (let xi = 0; xi < xIndex; xi++) {
+                    for (let yi = 0; yi < yIndex; yi++) {
                         dataForHeatmap[yi][xi] += dollarAmount;
                     }
                 }

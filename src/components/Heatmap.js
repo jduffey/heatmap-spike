@@ -1,8 +1,8 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 
-const minHouseEdgeTicks = Array.from({ length: 11 }, (_, i) => (i * 10).toFixed(2));
-const maxPayoutMultiplierTicks = Array.from({ length: 21 }, (_, i) => (i * 0.05).toFixed(3));
+const minHouseEdgeTicks = Array.from({ length: 10 }, (_, i) => (i * 10).toFixed(2));
+const maxPayoutMultiplierTicks = Array.from({ length: 20 }, (_, i) => (i * 0.05).toFixed(3));
 
 const colorscale = [
     [0, 'rgb(0,0,131)'],
