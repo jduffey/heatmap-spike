@@ -58,7 +58,7 @@ function getTextColor(value, minValue, maxValue) {
     const actualColor = getActualColor(value, minValue, maxValue);
     const [r, g, b] = actualColor.match(/\d+/g).map(Number);
 
-    const brightness = r * 0.2126 + g * 0.7152 + b * 0.0722;
+    const brightness = r * 0.2126 + g * 0.7552 + b * 0.1922;
 
     return brightness > 186 ? 'black' : 'white';
 }
