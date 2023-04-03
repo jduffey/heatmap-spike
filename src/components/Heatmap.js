@@ -36,7 +36,7 @@ export default function Heatmap({ data, totalDollarAmount }) {
                 },
                 yaxis: {
                     title: 'Maximum Payout Multiplier<br><-- Lower   VARIANCE   Higher -->',
-                    // dtick: 10,
+                    dtick: 10,
                     range: [-10, 100],
                 },
             }}

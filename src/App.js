@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// import DataTable from './components/DataTable';
+import DataTable from './components/DataTable';
 import Heatmap from './components/Heatmap';
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
     }, []);
 
     function createEmptyHeatmapData() {
-        return Array.from({ length: 10 }, () => Array.from({ length: 20 }, () => 0));
+        return Array.from({ length: 11 }, () => Array.from({ length: 21 }, () => 0));
     }
 
     function generateRandomDataPoint() {
@@ -33,8 +33,8 @@ function App() {
             console.log(minHouseEdge, maxPayoutMultiplier, dollarAmount, xIndex, yIndex);
 
             // Accumulate the dollar amounts for bins less than or equal to the current indices
-            for (let xi = 0; xi < xIndex; xi++) {
-                for (let yi = 0; yi < yIndex; yi++) {
+            for (let xi = 0; xi <= xIndex; xi++) {
+                for (let yi = 0; yi <= yIndex; yi++) {
                     dataForHeatmap[yi][xi] += dollarAmount;
                 }
             }
@@ -49,7 +49,7 @@ function App() {
     return (
         <div className="App">
             <Heatmap data={heatmapData} totalDollarAmount={totalDollarAmount} />
-            {/* <DataTable data={tableData} /> */}
+            <DataTable data={tableData} />
         </div>
     );
 }
