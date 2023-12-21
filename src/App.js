@@ -7,7 +7,7 @@ const BIN_SIZE = {
     maxPayoutMultiplier: 10,
     minHouseEdge: 0.05,
 }
-const DATA_POINTS = 100;
+const DATA_POINTS = 1000;
 const HOUSE_EDGE = {
     min: 0.05,
     max: 1,

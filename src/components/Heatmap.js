@@ -100,9 +100,9 @@ export default function Heatmap({ data, totalDollarAmount, countOfDataPoints }) 
                 height: 800,
                 title: `Minimum House Edge vs. Maximum Payout Multiplier<br>Total Deposits $${totalDollarAmount}, n=${countOfDataPoints}`,
                 xaxis: {
-                    title: 'Minimum House Edge<br><-- Player   ADVANTAGE   House -->',
+                    title: 'Minimum House Edge<br><-- House   ADVANTAGE   Player -->',
                     dtick: 0.05,
-                    range: [-0.025, 1.025],
+                    range: [1.025, -0.025],
                 },
                 yaxis: {
                     title: 'Maximum Payout Multiplier<br><-- Lower   VARIANCE   Higher -->',
